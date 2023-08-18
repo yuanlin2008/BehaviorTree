@@ -3,3 +3,7 @@
 /.vs/BehaviorTree/v16/*.suo
 /Examples/bin
 /Examples/obj
+/TestResults
+/packages
+/Tests/bin
+/Tests/obj

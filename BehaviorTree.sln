@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BehaviorTree", "BehaviorTre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{2BA6D29C-0B7C-4B6B-822D-62B1B2D34497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BA6D29C-0B7C-4B6B-822D-62B1B2D34497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BA6D29C-0B7C-4B6B-822D-62B1B2D34497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BA6D29C-0B7C-4B6B-822D-62B1B2D34497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BA6D29C-0B7C-4B6B-822D-62B1B2D34497}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

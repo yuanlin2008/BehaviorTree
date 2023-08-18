@@ -5,47 +5,90 @@ namespace BehaviorTree
 {
     public class TreeState
     {
-        public int getState(int id) 
-        {
-            Debug.Assert(id > size_ - 1);
-            return stack_[depth_ + id];
-        }
-        public void setState(int id, int value)
-        {
-            Debug.Assert(id > size_ - 1);
-            stack_[depth_ + id] = value;
-        }
-        public bool isRunning() { return depth_ + size_ > 0; }
+        public bool isRunning { get; set; }
+
         public void reset(int size)
         {
-            depth_ = 0;
-            size_ = size;
+            stacks_[0].top = 0;
+            stacks_[0].size = size;
+            branch_ = 0;
             expendStack();
+        }
+        public bool isBranch { get { return branch_ == 1; } }
+        public void branch()
+        {
+            Debug.Assert(branch_ == 0);
+            stacks_[1].top = 0;
+            stacks_[1].size = 0;
+            branch_ = 1;
+            expendStack();
+        }
+        public void discard(bool b)
+        {
+            Debug.Assert(branch_ == 1);
+            branch_ = 0;
+            if (b)
+                return;
+            var mStk = stacks_[0];
+            var bStk = stacks_[1];
+            mStk.top += bStk.top;
+            mStk.size = bStk.size;
+            expendStack();
+            for(int i = 0; i < bStk.top + bStk.size; i++)
+            {
+                mStk.states[mStk.top + mStk.size] = bStk.states[i];
+            }
         }
         public void push(int size)
         {
-            depth_ += size_;
-            size_ = size;
+            var stack = getStack();
+            stack.top += stack.size;
+            stack.size = size;
             expendStack();
         }
         public void pop(int size)
         {
-            depth_ -= size;
-            size_ = size;
+            var stack = getStack();
+            stack.top -= size;
+            stack.size = size;
+        }
+        public int getState(int id) 
+        {
+            var stack = getStack();
+            Debug.Assert(id < stack.size);
+            return stack.states[stack.top + id];
+        }
+        public void setState(int id, int value)
+        {
+            var stack = getStack();
+            Debug.Assert(id < stack.size);
+            stack.states[stack.top + id] = value;
         }
 
         void expendStack()
         {
-            int diff = depth_ + size_ - stack_.Count;
+            var stack = getStack();
+            int diff = stack.top + stack.size - stack.states.Count;
             if(diff > 0)
             {
                 for(int i = 0; i < diff; i++)
-                    stack_.Add(0);
+                    stack.states.Add(0);
             }
         }
 
-        int depth_ = 0;
-        int size_ = 0;
-        List<int> stack_ = new List<int>();
+        StateStack getStack()
+        {
+            return stacks_[branch_];
+        }
+
+        class StateStack
+        {
+            public int top = 0;
+            public int size = 0;
+            public List<int> states = new List<int>();
+        }
+
+        StateStack[] stacks_ = new StateStack[] { new StateStack(), new StateStack() };
+        int branch_ = 0;
     }
 }

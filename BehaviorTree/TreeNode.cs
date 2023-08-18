@@ -11,13 +11,13 @@ namespace BehaviorTree
         public virtual int getStateSize() { return 0; }
         public TickResult tickRootNode(TreeState s)
         {
-            bool isRunning = s.isRunning();
+            bool isRunning = s.isRunning;
             s.reset(getStateSize());
             var r = tick(s, !isRunning);
-            if(r != TickResult.Running)
-            {
+            if(r == TickResult.Running)
+                s.isRunning = true;
+            else
                 s.reset(0);
-            }
             return r;
         }
         protected TickResult tickChildNode(TreeState s, TreeNode n, bool init)
@@ -45,22 +45,49 @@ namespace BehaviorTree
         public override TickResult tick(TreeState state, bool init)
         {
             if (init)
-            {
                 state.setState(0, 0);
-            }
-            var curId = state.getState(0);
-            while(curId < children.Length)
+            for(int i = state.getState(0); i < children.Length; i++)
             {
-                var r = tickChildNode(state, children[curId], init);
+                state.setState(0, i);
+                var r = tickChildNode(state, children[i], init);
                 if(r == TickResult.Success)
-                {
                     init = true;
-                }
+                else
+                    return r;
+            }
+            return TickResult.Success; 
+        }
+    }
+
+    public sealed class ReactiveSequenceNode : ControlNode
+    {
+        public override int getStateSize()
+        {
+            return 1;
+        }
+        public override TickResult tick(TreeState state, bool init)
+        {
+            if (init)
+                state.setState(0, 0);
+            var curId = state.getState(0);
+            state.branch();
+            for(int i = 0; i < children.Length; i++)
+            {
+                if (i == curId)
+                    state.discard(true);
+                var r = tickChildNode(state, children[i], init);
+                if (r == TickResult.Success)
+                    init = true;
                 else
                 {
+                    if (state.isBranch)
+                        state.discard(false);
+                    state.setState(0, i);
                     return r;
                 }
             }
+            if (state.isBranch)
+                state.discard(false);
             return TickResult.Success; 
         }
     }
