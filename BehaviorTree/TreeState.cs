@@ -5,7 +5,7 @@ namespace BehaviorTree
 {
     public class TreeState
     {
-        public int getState(int id = 0) 
+        public int getState(int id) 
         {
             Debug.Assert(id > size_ - 1);
             return stack_[depth_ + id];
@@ -15,7 +15,7 @@ namespace BehaviorTree
             Debug.Assert(id > size_ - 1);
             stack_[depth_ + id] = value;
         }
-
+        public bool isRunning() { return depth_ + size_ > 0; }
         public void reset(int size)
         {
             depth_ = 0;
