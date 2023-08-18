@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BehaviorTree", "BehaviorTree\BehaviorTree.csproj", "{1FCBE0BC-CEE0-498F-8E5B-CA1884DDBC0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1FCBE0BC-CEE0-498F-8E5B-CA1884DDBC0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FCBE0BC-CEE0-498F-8E5B-CA1884DDBC0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FCBE0BC-CEE0-498F-8E5B-CA1884DDBC0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ABA8667-F2D2-4B3F-A847-B10915BB5DB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
