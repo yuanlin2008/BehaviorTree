@@ -21,7 +21,7 @@ namespace Tests
             public TickResult result;
         }
         void testControlNode<T>(int inState, bool inInit, TickResult c0Result, TickResult c1Result,
-            TickResult outResult, 
+            TickResult outResult, int outState,
             bool c0Ticked, bool c0Init,
             bool c1Ticked, bool c1Init) where T : ControlNode, new()
         {
@@ -33,6 +33,10 @@ namespace Tests
             var tn1 = new TestNode() { result = c1Result };
             var cn = new T() { children = new TreeNode[] { tn0, tn1 } };
             Assert.AreEqual(outResult, cn.tickNode(s, inInit));
+            s.reset();
+            s.push(1);
+            Assert.AreEqual(outState, s.getState(0));
+            s.pop(0);
             Assert.AreEqual(c0Ticked, tn0.ticked);
             Assert.AreEqual(c0Init, tn0.init);
             Assert.AreEqual(c1Ticked, tn1.ticked);
@@ -46,97 +50,97 @@ namespace Tests
             // 0, true
             /////////////////////////////////////////////////////////////////////////////////////////
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Failure, TickResult.Failure,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Failure, TickResult.Success,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Failure, TickResult.Running,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
 
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Success, TickResult.Failure,
-                TickResult.Failure, true, true, true, true);
+                TickResult.Failure, 1, true, true, true, true);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Success, TickResult.Success,
-                TickResult.Success, true, true, true, true);
+                TickResult.Success, 1, true, true, true, true);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Success, TickResult.Running,
-                TickResult.Running, true, true, true, true);
+                TickResult.Running, 1, true, true, true, true);
 
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Running, TickResult.Failure,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Running, TickResult.Success,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(0, true, TickResult.Running, TickResult.Running,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
 
             /////////////////////////////////////////////////////////////////////////////////////////
             // 0, false
             /////////////////////////////////////////////////////////////////////////////////////////
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Failure, TickResult.Failure,
-                TickResult.Failure, true, false, false, false);
+                TickResult.Failure, 0, true, false, false, false);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Failure, TickResult.Success,
-                TickResult.Failure, true, false, false, false);
+                TickResult.Failure, 0, true, false, false, false);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Failure, TickResult.Running,
-                TickResult.Failure, true, false, false, false);
+                TickResult.Failure, 0, true, false, false, false);
 
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Success, TickResult.Failure,
-                TickResult.Failure, true, false, true, true);
+                TickResult.Failure, 1, true, false, true, true);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Success, TickResult.Success,
-                TickResult.Success, true, false, true, true);
+                TickResult.Success, 1, true, false, true, true);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Success, TickResult.Running,
-                TickResult.Running, true, false, true, true);
+                TickResult.Running, 1, true, false, true, true);
 
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Running, TickResult.Failure,
-                TickResult.Running, true, false, false, false);
+                TickResult.Running, 0, true, false, false, false);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Running, TickResult.Success,
-                TickResult.Running, true, false, false, false);
+                TickResult.Running, 0, true, false, false, false);
             testControlNode<ReactiveSequenceNode>(0, false, TickResult.Running, TickResult.Running,
-                TickResult.Running, true, false, false, false);
+                TickResult.Running, 0, true, false, false, false);
 
             /////////////////////////////////////////////////////////////////////////////////////////
             // 1, true
             /////////////////////////////////////////////////////////////////////////////////////////
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Failure, TickResult.Failure,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Failure, TickResult.Success,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Failure, TickResult.Running,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
 
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Success, TickResult.Failure,
-                TickResult.Failure, true, true, true, true);
+                TickResult.Failure, 1, true, true, true, true);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Success, TickResult.Success,
-                TickResult.Success, true, true, true, true);
+                TickResult.Success, 1, true, true, true, true);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Success, TickResult.Running,
-                TickResult.Running, true, true, true, true);
+                TickResult.Running, 1, true, true, true, true);
 
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Running, TickResult.Failure,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Running, TickResult.Success,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, true, TickResult.Running, TickResult.Running,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
 
             /////////////////////////////////////////////////////////////////////////////////////////
             // 1, false
             /////////////////////////////////////////////////////////////////////////////////////////
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Failure, TickResult.Failure,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Failure, TickResult.Success,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Failure, TickResult.Running,
-                TickResult.Failure, true, true, false, false);
+                TickResult.Failure, 0, true, true, false, false);
 
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Success, TickResult.Failure,
-                TickResult.Failure, true, true, true, false);
+                TickResult.Failure, 1, true, true, true, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Success, TickResult.Success,
-                TickResult.Success, true, true, true, false);
+                TickResult.Success, 1, true, true, true, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Success, TickResult.Running,
-                TickResult.Running, true, true, true, false);
+                TickResult.Running, 1, true, true, true, false);
 
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Running, TickResult.Failure,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Running, TickResult.Success,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
             testControlNode<ReactiveSequenceNode>(1, false, TickResult.Running, TickResult.Running,
-                TickResult.Running, true, true, false, false);
+                TickResult.Running, 0, true, true, false, false);
 
         }
     }

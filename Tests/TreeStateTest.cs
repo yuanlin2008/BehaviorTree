@@ -35,6 +35,11 @@ namespace Tests
                 };
             var s = new TreeState();
             testState(s, sn);
+            Assert.IsFalse(s.isRunning);
+            s.push(0);
+            Assert.IsTrue(s.isRunning);
+            s.pop(0);
+            Assert.IsFalse(s.isRunning);
         }
         [TestMethod]
         public void TestBranch()
