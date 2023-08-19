@@ -7,13 +7,6 @@ namespace BehaviorTree
     {
         public bool isRunning { get; set; }
 
-        public void reset(int size)
-        {
-            stacks_[0].top = 0;
-            stacks_[0].size = size;
-            branch_ = 0;
-            expendStack();
-        }
         public bool isBranch { get { return branch_ == 1; } }
         public void branch()
         {
@@ -34,19 +27,31 @@ namespace BehaviorTree
             branch_ = 0;
             var mStk = stacks_[0];
             var bStk = stacks_[1];
-            mStk.top += bStk.top;
-            mStk.size = bStk.size;
-            expendStack();
-            // Branch => Main
-            for(int i = 0; i < bStk.top + bStk.size; i++)
-                mStk.states[mStk.top + i] = bStk.states[i];
+            if (b)
+            {
+                // Discard branch.
+                for(int i = 0; i < mStk.size; i++)
+                    mStk.states[mStk.top + i] = bStk.states[i];
+            }
+            else
+            {
+                // Discard main.
+                var lastTop = mStk.top;
+                mStk.top += bStk.top;
+                mStk.size = bStk.size;
+                expendStack();
+                for(int i = 0; i < bStk.top + bStk.size; i++)
+                    mStk.states[lastTop + i] = bStk.states[i];
+            }
         }
-        public void push(int size)
+        public int push(int size)
         {
             var stack = getStack();
+            var lastSize = stack.size;
             stack.top += stack.size;
             stack.size = size;
             expendStack();
+            return lastSize;
         }
         public void pop(int size)
         {

@@ -7,25 +7,23 @@ namespace BehaviorTree
 
     public abstract class TreeNode
     {
-        public virtual TickResult tick(TreeState state, bool init) { return TickResult.Failure; }
-        public virtual int getStateSize() { return 0; }
-        public TickResult tickRootNode(TreeState s)
+        protected virtual TickResult tick(TreeState state, bool init) { return TickResult.Failure; }
+        protected virtual int getStateSize() { return 0; }
+        public TickResult tickNode(TreeState state, bool init)
+        {
+            var lastSize = state.push(getStateSize());
+            var result = tick(state, init);
+            if(result != TickResult.Running)
+                state.pop(lastSize);
+            return result;
+        }
+
+        public TickResult tickRoot(TreeState s)
         {
             bool isRunning = s.isRunning;
-            s.reset(getStateSize());
-            var r = tick(s, !isRunning);
+            var r = tickNode(s, !isRunning);
             if(r == TickResult.Running)
                 s.isRunning = true;
-            else
-                s.reset(0);
-            return r;
-        }
-        protected TickResult tickChildNode(TreeState s, TreeNode n, bool init)
-        {
-            s.push(n.getStateSize());
-            var r = n.tick(s, init);
-            if(r != TickResult.Running)
-                s.pop(getStateSize());
             return r;
         }
     }
@@ -34,20 +32,21 @@ namespace BehaviorTree
     {
         public TreeNode[] children;
     }
-    public sealed class SequenceNode : ControlNode
+
+    public class SequenceNode : ControlNode
     {
-        public override int getStateSize()
+        protected override int getStateSize()
         {
             return 1;
         }
-        public override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init)
         {
             if (init)
                 state.setState(0, 0);
             for(int i = state.getState(0); i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = tickChildNode(state, children[i], init);
+                var r = children[i].tickNode(state, init);
                 if(r == TickResult.Success)
                     init = true;
                 else
@@ -59,11 +58,11 @@ namespace BehaviorTree
 
     public sealed class ReactiveSequenceNode : ControlNode
     {
-        public override int getStateSize()
+        protected override int getStateSize()
         {
             return 1;
         }
-        public override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init)
         {
             if (init)
                 state.setState(0, 0);
@@ -71,13 +70,11 @@ namespace BehaviorTree
             state.branch();
             for(int i = 0; i < curId; i++)
             {
-                var r = tickChildNode(state, children[i], true);
-                if(r == TickResult.Failure)
-                    return r;
-                else if(r == TickResult.Running)
+                state.setState(0, i);
+                var r = children[i].tickNode(state, true);
+                if(r != TickResult.Success)
                 {
                     state.discard(false);
-                    state.setState(0, i);
                     return r;
                 }
             }
@@ -85,7 +82,7 @@ namespace BehaviorTree
             for(int i = curId; i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = tickChildNode(state, children[i], init);
+                var r = children[i].tickNode(state, init);
                 if(r == TickResult.Success)
                     init = true;
                 else
