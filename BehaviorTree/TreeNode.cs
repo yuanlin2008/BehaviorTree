@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace BehaviorTree
 {
-    public enum TickResult { Success, Failure, Running }
+    public enum TickResult { Failure, Success, Running }
 
     public abstract class TreeNode
     {
