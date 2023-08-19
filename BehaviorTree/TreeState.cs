@@ -5,8 +5,18 @@ namespace BehaviorTree
 {
     public class TreeState
     {
-        public bool isRunning { get; set; }
-
+        public bool isRunning { get { return pushLevel_ > 0; } }
+        public void reset()
+        {
+            pushLevel_ = 0;
+            branch_ = 0;
+            var mStk = stacks_[0];
+            var bStk = stacks_[1];
+            mStk.top = 0;
+            mStk.size = 0;
+            bStk.top = 0;
+            bStk.size = 0;
+        }
         public bool isBranch { get { return branch_ == 1; } }
         public void branch()
         {
@@ -46,6 +56,7 @@ namespace BehaviorTree
         }
         public int push(int size)
         {
+            pushLevel_++;
             var stack = getStack();
             var lastSize = stack.size;
             stack.top += stack.size;
@@ -55,6 +66,7 @@ namespace BehaviorTree
         }
         public void pop(int size)
         {
+            pushLevel_--;
             var stack = getStack();
             stack.top -= size;
             stack.size = size;
@@ -97,5 +109,6 @@ namespace BehaviorTree
 
         StateStack[] stacks_ = new StateStack[] { new StateStack(), new StateStack() };
         int branch_ = 0;
+        int pushLevel_ = 0;
     }
 }

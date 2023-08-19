@@ -29,11 +29,10 @@ namespace Tests
             s.push(1);
             s.setState(0, inState);
             s.pop(0);
-            s.isRunning = !inInit;
             var tn0 = new TestNode() { result = c0Result };
             var tn1 = new TestNode() { result = c1Result };
             var cn = new T() { children = new TreeNode[] { tn0, tn1 } };
-            Assert.AreEqual(outResult, cn.tickRoot(s));
+            Assert.AreEqual(outResult, cn.tickNode(s, inInit));
             Assert.AreEqual(c0Ticked, tn0.ticked);
             Assert.AreEqual(c0Init, tn0.init);
             Assert.AreEqual(c1Ticked, tn1.ticked);

@@ -21,9 +21,9 @@ namespace BehaviorTree
         public TickResult tickRoot(TreeState s)
         {
             bool isRunning = s.isRunning;
+            s.reset();
             var r = tickNode(s, !isRunning);
-            if(r == TickResult.Running)
-                s.isRunning = true;
+            Debug.Assert(s.isRunning == (r == TickResult.Running));
             return r;
         }
     }
