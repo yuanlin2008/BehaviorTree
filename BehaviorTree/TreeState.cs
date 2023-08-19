@@ -18,26 +18,28 @@ namespace BehaviorTree
         public void branch()
         {
             Debug.Assert(branch_ == 0);
-            stacks_[1].top = 0;
-            stacks_[1].size = 0;
+            var mStk = stacks_[0];
+            var bStk = stacks_[1];
+            bStk.top = 0;
+            bStk.size = mStk.size;
             branch_ = 1;
             expendStack();
+            // Main => Branch.
+            for(int i = 0; i < bStk.size; i++)
+                bStk.states[i] = mStk.states[mStk.top + i];
         }
         public void discard(bool b)
         {
             Debug.Assert(branch_ == 1);
             branch_ = 0;
-            if (b)
-                return;
             var mStk = stacks_[0];
             var bStk = stacks_[1];
             mStk.top += bStk.top;
             mStk.size = bStk.size;
             expendStack();
+            // Branch => Main
             for(int i = 0; i < bStk.top + bStk.size; i++)
-            {
-                mStk.states[mStk.top + mStk.size] = bStk.states[i];
-            }
+                mStk.states[mStk.top + i] = bStk.states[i];
         }
         public void push(int size)
         {

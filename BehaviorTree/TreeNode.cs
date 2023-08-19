@@ -25,9 +25,7 @@ namespace BehaviorTree
             s.push(n.getStateSize());
             var r = n.tick(s, init);
             if(r != TickResult.Running)
-            {
                 s.pop(getStateSize());
-            }
             return r;
         }
     }
@@ -71,23 +69,28 @@ namespace BehaviorTree
                 state.setState(0, 0);
             var curId = state.getState(0);
             state.branch();
-            for(int i = 0; i < children.Length; i++)
+            for(int i = 0; i < curId; i++)
             {
-                if (i == curId)
-                    state.discard(true);
-                var r = tickChildNode(state, children[i], init);
-                if (r == TickResult.Success)
-                    init = true;
-                else
+                var r = tickChildNode(state, children[i], true);
+                if(r == TickResult.Failure)
+                    return r;
+                else if(r == TickResult.Running)
                 {
-                    if (state.isBranch)
-                        state.discard(false);
+                    state.discard(false);
                     state.setState(0, i);
                     return r;
                 }
             }
-            if (state.isBranch)
-                state.discard(false);
+            state.discard(true);
+            for(int i = curId; i < children.Length; i++)
+            {
+                state.setState(0, i);
+                var r = tickChildNode(state, children[i], init);
+                if(r == TickResult.Success)
+                    init = true;
+                else
+                    return r;
+            }
             return TickResult.Success; 
         }
     }
