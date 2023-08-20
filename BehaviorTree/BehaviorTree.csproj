@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlNode.cs" />
+    <Compile Include="DecoratorNode.cs" />
+    <Compile Include="LeafNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeState.cs" />

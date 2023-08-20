@@ -84,6 +84,7 @@ namespace BehaviorTree
             stack.states[stack.top + id] = value;
         }
 
+        StateStack getStack() { return stacks_[branch_]; }
         void expendStack()
         {
             var stack = getStack();
@@ -93,11 +94,6 @@ namespace BehaviorTree
                 for(int i = 0; i < diff; i++)
                     stack.states.Add(0);
             }
-        }
-
-        StateStack getStack()
-        {
-            return stacks_[branch_];
         }
 
         class StateStack

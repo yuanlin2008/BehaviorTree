@@ -5,7 +5,7 @@ using TS = BehaviorTree.TickResult;
 namespace Tests
 {
     [TestClass]
-    public class TreeNodeTest
+    public class ControlNodeTest
     {
         enum RS { N, I, R}
         class TestNode : TreeNode
@@ -19,6 +19,7 @@ namespace Tests
             public TS r;
             public RS s;
         }
+
         void testControlNode<T>(int inState, bool inInit, TS c0Result, TS c1Result, TS c2Result,
             TS outResult, int outState, 
             RS c0, RS c1, RS c2) where T : ControlNode, new()
@@ -65,6 +66,35 @@ namespace Tests
 
             testControlNode<SequenceNode>(2,false,  TS.Success,TS.Success,TS.Running, /**/TS.Running,2, RS.N,RS.N,RS.R);
             testControlNode<SequenceNode>(2,false,  TS.Success,TS.Success,TS.Success, /**/TS.Success,2, RS.N,RS.N,RS.R);
+        }
+        [TestMethod]
+        public void TestFallbackNode()
+        {
+            testControlNode<FallbackNode>(0,true,  TS.Success,TS.Success,TS.Success, /**/TS.Success,0, RS.I,RS.N,RS.N);
+            testControlNode<FallbackNode>(0,true,  TS.Running,TS.Success,TS.Success, /**/TS.Running,0, RS.I,RS.N,RS.N);
+            testControlNode<FallbackNode>(0,true,  TS.Failure,TS.Success,TS.Success, /**/TS.Success,1, RS.I,RS.I,RS.N);
+            testControlNode<FallbackNode>(0,true,  TS.Failure,TS.Running,TS.Success, /**/TS.Running,1, RS.I,RS.I,RS.N);
+            testControlNode<FallbackNode>(0,true,  TS.Failure,TS.Failure,TS.Success, /**/TS.Success,2, RS.I,RS.I,RS.I);
+            testControlNode<FallbackNode>(0,true,  TS.Failure,TS.Failure,TS.Running, /**/TS.Running,2, RS.I,RS.I,RS.I);
+            testControlNode<FallbackNode>(0,true,  TS.Failure,TS.Failure,TS.Failure, /**/TS.Failure,2, RS.I,RS.I,RS.I);
+
+            testControlNode<FallbackNode>(0,false,  TS.Success,TS.Success,TS.Success, /**/TS.Success,0, RS.R,RS.N,RS.N);
+            testControlNode<FallbackNode>(0,false,  TS.Running,TS.Success,TS.Success, /**/TS.Running,0, RS.R,RS.N,RS.N);
+            testControlNode<FallbackNode>(0,false,  TS.Failure,TS.Success,TS.Success, /**/TS.Success,1, RS.R,RS.I,RS.N);
+            testControlNode<FallbackNode>(0,false,  TS.Failure,TS.Running,TS.Success, /**/TS.Running,1, RS.R,RS.I,RS.N);
+            testControlNode<FallbackNode>(0,false,  TS.Failure,TS.Failure,TS.Success, /**/TS.Success,2, RS.R,RS.I,RS.I);
+            testControlNode<FallbackNode>(0,false,  TS.Failure,TS.Failure,TS.Running, /**/TS.Running,2, RS.R,RS.I,RS.I);
+            testControlNode<FallbackNode>(0,false,  TS.Failure,TS.Failure,TS.Failure, /**/TS.Failure,2, RS.R,RS.I,RS.I);
+
+            testControlNode<FallbackNode>(1,false,  TS.Failure,TS.Success,TS.Success, /**/TS.Success,1, RS.N,RS.R,RS.N);
+            testControlNode<FallbackNode>(1,false,  TS.Failure,TS.Running,TS.Success, /**/TS.Running,1, RS.N,RS.R,RS.N);
+            testControlNode<FallbackNode>(1,false,  TS.Failure,TS.Failure,TS.Success, /**/TS.Success,2, RS.N,RS.R,RS.I);
+            testControlNode<FallbackNode>(1,false,  TS.Failure,TS.Failure,TS.Running, /**/TS.Running,2, RS.N,RS.R,RS.I);
+            testControlNode<FallbackNode>(1,false,  TS.Failure,TS.Failure,TS.Failure, /**/TS.Failure,2, RS.N,RS.R,RS.I);
+
+            testControlNode<FallbackNode>(2,false,  TS.Failure,TS.Failure,TS.Success, /**/TS.Success,2, RS.N,RS.N,RS.R);
+            testControlNode<FallbackNode>(2,false,  TS.Failure,TS.Failure,TS.Running, /**/TS.Running,2, RS.N,RS.N,RS.R);
+            testControlNode<FallbackNode>(2,false,  TS.Failure,TS.Failure,TS.Failure, /**/TS.Failure,2, RS.N,RS.N,RS.R);
         }
         [TestMethod]
         public void TestReactiveSequenceNode()

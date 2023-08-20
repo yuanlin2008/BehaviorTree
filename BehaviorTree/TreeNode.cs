@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace BehaviorTree
@@ -7,17 +6,11 @@ namespace BehaviorTree
 
     public abstract class TreeNode
     {
-        protected virtual TickResult tick(TreeState state, bool init) { return TickResult.Failure; }
-        protected virtual int getStateSize() { return 0; }
-        public TickResult tickNode(TreeState state, bool init)
-        {
-            var lastSize = state.push(getStateSize());
-            var result = tick(state, init);
-            if(result != TickResult.Running)
-                state.pop(lastSize);
-            return result;
-        }
-
+        /// <summary>
+        /// 以此节点为根节点tick行为树.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public TickResult tickRoot(TreeState s)
         {
             bool isRunning = s.isRunning;
@@ -26,78 +19,31 @@ namespace BehaviorTree
             Debug.Assert(s.isRunning == (r == TickResult.Running));
             return r;
         }
-    }
 
-    public abstract class ControlNode : TreeNode
-    {
-        public TreeNode[] children;
-    }
+        /// <summary>
+        /// 获得节点需要的int状态大小.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual int getStateSize() { return 0; }
 
-    public class SequenceNode : ControlNode
-    {
-        protected override int getStateSize()
-        {
-            return 1;
+        /// <summary>
+        /// 节点的tick逻辑.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="init">是否为初始运行</param>
+        /// <returns></returns>
+        protected virtual TickResult tick(TreeState state, bool init) 
+        { 
+            return TickResult.Failure; 
         }
-        protected override TickResult tick(TreeState state, bool init)
-        {
-            if (init)
-                state.setState(0, 0);
-            for(int i = state.getState(0); i < children.Length; i++)
-            {
-                state.setState(0, i);
-                var r = children[i].tickNode(state, init);
-                if(r == TickResult.Success)
-                    init = true;
-                else
-                    return r;
-            }
-            return TickResult.Success; 
-        }
-    }
 
-    public sealed class ReactiveSequenceNode : ControlNode
-    {
-        protected override int getStateSize()
+        public TickResult tickNode(TreeState state, bool init)
         {
-            return 1;
+            var lastSize = state.push(getStateSize());
+            var result = tick(state, init);
+            if(result != TickResult.Running)
+                state.pop(lastSize);
+            return result;
         }
-        protected override TickResult tick(TreeState state, bool init)
-        {
-            if (init)
-                state.setState(0, 0);
-            var curId = state.getState(0);
-            state.branch();
-            for(int i = 0; i < curId; i++)
-            {
-                state.setState(0, i);
-                var r = children[i].tickNode(state, true);
-                if(r != TickResult.Success)
-                {
-                    state.discard(false);
-                    return r;
-                }
-            }
-            state.discard(true);
-            for(int i = curId; i < children.Length; i++)
-            {
-                state.setState(0, i);
-                var r = children[i].tickNode(state, init);
-                if(r == TickResult.Success)
-                    init = true;
-                else
-                    return r;
-            }
-            return TickResult.Success; 
-        }
-    }
-
-    public abstract class DecoratorNode : TreeNode
-    {
-        public TreeNode child;
-    }
-
-    public abstract class LeftNode : TreeNode
-    {
     }
 }
