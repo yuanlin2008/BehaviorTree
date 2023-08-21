@@ -1,24 +1,21 @@
-using System.Diagnostics;
-
 namespace BehaviorTree
 {
     public enum TickResult { Failure, Success, Running }
 
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
+    public class NodeName : System.Attribute
+    {
+        public NodeName(string name) { name_ = name; }
+        public string name { get { return name_; } }
+        string name_;
+    }
+
     public abstract class TreeNode
     {
         /// <summary>
-        /// 以此节点为根节点tick行为树.
+        /// 节点在图中的位置.
         /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public TickResult tickRoot(TreeState s)
-        {
-            bool isRunning = s.isRunning;
-            s.reset();
-            var r = tickNode(s, !isRunning);
-            Debug.Assert(s.isRunning == (r == TickResult.Running));
-            return r;
-        }
+        public int x, y;
 
         /// <summary>
         /// 获得节点需要的int状态大小.

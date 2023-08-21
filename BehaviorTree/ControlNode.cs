@@ -5,6 +5,7 @@
         public TreeNode[] children;
     }
 
+    [NodeName("Sequence")]
     public class SequenceNode : ControlNode
     {
         protected override int getStateSize() { return 1; }
@@ -26,6 +27,7 @@
         }
     }
 
+    [NodeName("Fallback")]
     public class FallbackNode : ControlNode
     {
         protected override int getStateSize() { return 1; }
@@ -47,6 +49,7 @@
         }
     }
 
+    [NodeName("ReactiveSequence")]
     public class ReactiveSequenceNode : ControlNode
     {
         protected override int getStateSize() { return 1; }
@@ -81,6 +84,7 @@
         }
     }
 
+    [NodeName("ReactiveFallback")]
     public class ReactiveFallbackNode : ControlNode
     {
         protected override int getStateSize() { return 1; }

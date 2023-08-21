@@ -5,6 +5,7 @@
         public TreeNode child;
     }
 
+    [NodeName("Invert")]
     public class InvertNode : DecoratorNode
     {
         protected override TickResult tick(TreeState state, bool init)
@@ -19,6 +20,7 @@
         }
     }
 
+    [NodeName("ForceSuccess")]
     public class ForceSuccessNode : DecoratorNode
     {
         protected override TickResult tick(TreeState state, bool init)
@@ -30,6 +32,7 @@
         }
     }
 
+    [NodeName("ForceFailure")]
     public class ForceFailureNode : DecoratorNode
     {
         protected override TickResult tick(TreeState state, bool init)
@@ -41,6 +44,7 @@
         }
     }
 
+    [NodeName("Repeat")]
     public class RepeatNode : DecoratorNode
     {
         public int cycles = 0;
@@ -66,6 +70,7 @@
         }
     }
 
+    [NodeName("Retry")]
     public class RetryNode : DecoratorNode
     {
         public int cycles = 0;
