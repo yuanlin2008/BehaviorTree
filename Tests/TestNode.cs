@@ -16,7 +16,7 @@ namespace Tests
 
     class TestNode : TreeNode
     {
-        protected override TS tick(TreeState state, bool init)
+        protected override TS tick(TreeState state, bool init, object context)
         {
             Assert.AreEqual(RS.N, run);
             run = init ? RS.I : RS.R;

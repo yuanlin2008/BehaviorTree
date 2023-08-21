@@ -29,15 +29,15 @@ namespace BehaviorTree
         /// <param name="state"></param>
         /// <param name="init">是否为初始运行</param>
         /// <returns></returns>
-        protected virtual TickResult tick(TreeState state, bool init) 
+        protected virtual TickResult tick(TreeState state, bool init, object context) 
         { 
             return TickResult.Failure; 
         }
 
-        public TickResult tickNode(TreeState state, bool init)
+        public TickResult tickNode(TreeState state, bool init, object context)
         {
             var lastSize = state.push(getStateSize());
-            var result = tick(state, init);
+            var result = tick(state, init, context);
             if(result != TickResult.Running)
                 state.pop(lastSize);
             return result;

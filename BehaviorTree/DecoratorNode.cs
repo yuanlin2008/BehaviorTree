@@ -8,11 +8,11 @@
     [NodeName("Invert")]
     public class InvertNode : DecoratorNode
     {
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (child == null)
                 return TickResult.Failure;
-            var r = child.tickNode(state, init);
+            var r = child.tickNode(state, init, context);
             return 
                 (r == TickResult.Failure) ? 
                     TickResult.Success : 
@@ -23,11 +23,11 @@
     [NodeName("ForceSuccess")]
     public class ForceSuccessNode : DecoratorNode
     {
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (child == null)
                 return TickResult.Success;
-            var r = child.tickNode(state, init);
+            var r = child.tickNode(state, init, context);
             return (r == TickResult.Running) ? r : TickResult.Success;
         }
     }
@@ -35,11 +35,11 @@
     [NodeName("ForceFailure")]
     public class ForceFailureNode : DecoratorNode
     {
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (child == null)
                 return TickResult.Success;
-            var r = child.tickNode(state, init);
+            var r = child.tickNode(state, init, context);
             return (r == TickResult.Running) ? r : TickResult.Failure;
         }
     }
@@ -49,7 +49,7 @@
     {
         public int cycles = 0;
         protected override int getStateSize() { return 1; }
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (child == null)
                 return TickResult.Failure;
@@ -59,7 +59,7 @@
             var curCycle = state.getState(0);
             while(curCycle < cycles || cycles <= 0)
             {
-                var r = child.tickNode(state, init);
+                var r = child.tickNode(state, init, context);
                 if (r != TickResult.Success)
                     return r;
                 init = true;
@@ -75,7 +75,7 @@
     {
         public int cycles = 0;
         protected override int getStateSize() { return 1; }
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (child == null)
                 return TickResult.Failure;
@@ -85,7 +85,7 @@
             var curCycle = state.getState(0);
             while(curCycle < cycles || cycles <= 0)
             {
-                var r = child.tickNode(state, init);
+                var r = child.tickNode(state, init, context);
                 if (r != TickResult.Failure)
                     return r;
                 init = true;

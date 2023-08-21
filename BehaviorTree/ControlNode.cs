@@ -10,14 +10,14 @@
     {
         protected override int getStateSize() { return 1; }
 
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (init)
                 state.setState(0, 0);
             for(int i = state.getState(0); i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, init);
+                var r = children[i].tickNode(state, init, context);
                 if(r == TickResult.Success)
                     init = true;
                 else
@@ -32,14 +32,14 @@
     {
         protected override int getStateSize() { return 1; }
 
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (init)
                 state.setState(0, 0);
             for(int i = state.getState(0); i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, init);
+                var r = children[i].tickNode(state, init, context);
                 if(r == TickResult.Failure)
                     init = true;
                 else
@@ -54,7 +54,7 @@
     {
         protected override int getStateSize() { return 1; }
 
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (init)
                 state.setState(0, 0);
@@ -63,7 +63,7 @@
             for(int i = 0; i < curId; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, true);
+                var r = children[i].tickNode(state, true, context);
                 if(r != TickResult.Success)
                 {
                     state.discard(false);
@@ -74,7 +74,7 @@
             for(int i = curId; i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, init);
+                var r = children[i].tickNode(state, init, context);
                 if(r == TickResult.Success)
                     init = true;
                 else
@@ -89,7 +89,7 @@
     {
         protected override int getStateSize() { return 1; }
 
-        protected override TickResult tick(TreeState state, bool init)
+        protected override TickResult tick(TreeState state, bool init, object context)
         {
             if (init)
                 state.setState(0, 0);
@@ -98,7 +98,7 @@
             for(int i = 0; i < curId; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, true);
+                var r = children[i].tickNode(state, true, context);
                 if(r != TickResult.Failure)
                 {
                     state.discard(false);
@@ -109,7 +109,7 @@
             for(int i = curId; i < children.Length; i++)
             {
                 state.setState(0, i);
-                var r = children[i].tickNode(state, init);
+                var r = children[i].tickNode(state, init, context);
                 if(r == TickResult.Failure)
                     init = true;
                 else

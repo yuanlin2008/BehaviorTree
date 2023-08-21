@@ -11,11 +11,11 @@ namespace BehaviorTree
     public class SubTreeNode : TreeNode
     {
         public Tree subtree;
-        protected override TickResult tick(TreeState state, bool init) 
+        protected override TickResult tick(TreeState state, bool init, object context) 
         {
             if (subtree == null || subtree.root == null)
                 return TickResult.Failure;
-            return subtree.root.tickNode(state, init);
+            return subtree.root.tickNode(state, init, context);
         }
     }
 
@@ -25,13 +25,13 @@ namespace BehaviorTree
         public TreeNode root;
         public TreeNode[] others;
 
-        public TickResult tick(TreeState s)
+        public TickResult tick(TreeState s, object context)
         {
             if (root == null)
                 return TickResult.Failure;
             bool isRunning = s.isRunning;
             s.reset();
-            var r = root.tickNode(s, !isRunning);
+            var r = root.tickNode(s, !isRunning, context);
             Debug.Assert(s.isRunning == (r == TickResult.Running));
             return r;
         }

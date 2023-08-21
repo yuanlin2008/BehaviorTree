@@ -13,7 +13,7 @@ namespace Tests
             var s = new TreeState();
             var c = new TestNode() { result = cResult };
             n.child = c;
-            Assert.AreEqual(outResult, n.tickNode(s, inInit));
+            Assert.AreEqual(outResult, n.tickNode(s, inInit, null));
             Assert.AreEqual(cr, c.run);
         }
 
@@ -26,7 +26,7 @@ namespace Tests
             s.pop(0);
             var c = new TestNode() { result = cResult };
             n.child = c;
-            Assert.AreEqual(outResult, n.tickNode(s, inInit));
+            Assert.AreEqual(outResult, n.tickNode(s, inInit, null));
             s.reset();
             s.push(1);
             Assert.AreEqual(outState, s.getState(0));

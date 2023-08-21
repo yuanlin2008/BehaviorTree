@@ -19,7 +19,7 @@ namespace Tests
             var tn1 = new TestNode() { result = c1Result };
             var tn2 = new TestNode() { result = c2Result };
             var cn = new T() { children = new TreeNode[] { tn0, tn1, tn2 } };
-            Assert.AreEqual(outResult, cn.tickNode(s, inInit));
+            Assert.AreEqual(outResult, cn.tickNode(s, inInit, null));
             s.reset();
             s.push(1);
             Assert.AreEqual(outState, s.getState(0));
